@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,6 +14,7 @@ class AuthController extends Controller
 {
     public function register(Request $request){
         try{
+
             $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users',
@@ -25,7 +27,7 @@ class AuthController extends Controller
             ]);
         }
         catch(ValidationException $e){
-            return response()->json(['massage'=>'Пользователь уже зарегестрирован'],400);
+            return response()->json([$e],400);
         }
         return response()->json(['massage'=>'пользователь создан'], 200);
     }
@@ -40,6 +42,7 @@ class AuthController extends Controller
                 'email' => ['Неверные данные'],
             ]);
         }
+//        $user->tokens()->delete();
         $token = $user->createToken('my-app-token')->plainTextToken;
         DB::table('personal_access_tokens')->where('token', hash('sha256', explode('|', $token)[1]))
         ->update(['expires_at' => \Carbon\Carbon::now()->addDays(10)]);

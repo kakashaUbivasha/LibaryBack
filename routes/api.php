@@ -19,8 +19,7 @@ Route::middleware(['auth:sanctum','token.expiration'])->get('/user', function (R
     return $request->user();
 });
 Route::group(['middleware'=>'auth:sanctum'],function(){
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
-Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-//Route::post('/logout', [AuthController::class, 'logout']);
