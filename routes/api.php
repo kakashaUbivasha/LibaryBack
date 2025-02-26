@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Book\FavoriteController;
+use App\Http\Controllers\Book\ReservationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,6 +28,8 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorite', [FavoriteController::class, 'store']);
     Route::delete('/favorite', [FavoriteController::class, 'destroy']);
+    Route::get('/reservations', [ReservationController::class, 'index']);
+    Route::post('/reservation', [ReservationController::class, 'store']);
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', LoginController::class);
