@@ -22,6 +22,7 @@ class Book extends Model
         return $this->belongsToMany(User::class, 'favorites', 'book_id', 'user_id');
     }
     public function reservations(){
-        return $this->belongsToMany(User::class, 'reservations', 'book_id', 'user_id');
+        return $this->belongsToMany(User::class, 'reservations', 'book_id', 'user_id')
+            ->withPivot('reserved_until', 'status')->withTimestamps();
     }
 }

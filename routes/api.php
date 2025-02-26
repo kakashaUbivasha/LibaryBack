@@ -30,6 +30,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::delete('/favorite', [FavoriteController::class, 'destroy']);
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservation', [ReservationController::class, 'store']);
+    Route::put('/reservation', [ReservationController::class, 'update']);
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', LoginController::class);
