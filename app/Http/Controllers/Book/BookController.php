@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookRequest;
+use App\Http\Requests\BookSearchRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use http\Env\Request;
@@ -34,5 +35,11 @@ class BookController extends Controller
         $book = Book::findOrFail($id);
         $book->delete();
         return response()->json(['message'=>'Книга удалена'], 204);
+    }
+    public function search(BookSearchRequest $request){
+        $data = $request->validated()['query'];
+        $books = Book::whereFullText(['title', 'description', 'author'], $data);
+        return BookResource::collection($books->paginate(20));
+
     }
 }
