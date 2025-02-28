@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Book;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookIdRequest;
 use App\Http\Resources\BookResource;
+use App\Http\Resources\ReservationResource;
 use App\Models\Book;
 use App\Models\Reservation;
 use App\Services\ReservationService;
@@ -36,6 +37,16 @@ class ReservationController extends Controller
         try {
             $reservation->update($user, $data);
             return response(['message' => 'Книга успешно сдана'], 200);
+        }
+        catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
+        }
+    }
+    public function history(ReservationService $reservation){
+        $user = auth()->user();
+        try {
+             $data = $reservation->history($user);
+             return ReservationResource::collection($data);
         }
         catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);

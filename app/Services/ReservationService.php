@@ -10,7 +10,9 @@ class ReservationService
         public function update($user, $data)
         {
             $book = Book::findOrFail($data['book_id']);
-            $reservation = $user->reservationBooks()->where('book_id', $book->id)->first();
+            $reservation = $user->reservationBooks()->where('book_id', $book->id)
+                ->orderByDesc('reservations.created_at')
+                ->first();
             if(!$reservation){
                 throw new \Exception('Вы не забронировали эту книгу', 400);
             }
@@ -36,7 +38,7 @@ class ReservationService
                     if (in_array($reservation->pivot->status, ['active', 'expired'])) {
                         throw new \Exception('Вы уже забронировали эту книгу', 400);
                     } elseif ($reservation->pivot->status === 'canceled') {
-                        $user->reservationBooks()->updateExistingPivot($book->id, [
+                        $user->reservationBooks()->attach($book->id, [
                             'status' => 'active',
                             'reserved_until' => now()->addDays(7),
                         ]);
@@ -50,5 +52,12 @@ class ReservationService
 
                 $book->decrement('count');
             });
+        }
+        public function history($user){
+            $data = $user->reservationBooks()->orderBy('created_at', 'desc')->get();
+            if(!$data){
+                throw new \Exception('У вас нет забронированных книг!', 400);
+            }
+            return $data;
         }
 }

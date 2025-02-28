@@ -31,6 +31,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservation', [ReservationController::class, 'store']);
     Route::put('/reservation', [ReservationController::class, 'update']);
+    Route::get('/reservation/history', [ReservationController::class, 'history']);
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', LoginController::class);
