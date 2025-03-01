@@ -42,4 +42,9 @@ class BookController extends Controller
         return BookResource::collection($books->paginate(20));
 
     }
+    public function top()
+    {
+        $books = Book::withCount('reservations')->orderBy('reservations_count', 'desc')->limit(10)->get();
+        return BookResource::collection($books);
+    }
 }
