@@ -5,7 +5,7 @@ namespace App\Http\Filters;
 use App\Models\Genre;
 use Illuminate\Database\Eloquent\Builder;
 
-class BookFilter
+class BookFilter extends AbstractFilter
 {
     public const GENRE = 'genre';
     public const AUTHOR = 'author';
@@ -18,7 +18,7 @@ class BookFilter
             self::TAGS => [$this, 'tags'],
         ];
     }
-    public function title(Builder $builder, $value)
+    public function genre(Builder $builder, $value)
     {
         $genre = Genre::whereRaw('LOWER(name) = LOWER(?)', [$value])->firstOrFail();
         if($genre){
@@ -31,6 +31,11 @@ class BookFilter
     }
     public function tags(Builder $builder, $value)
     {
-        $builder->where('tags', $value['category_id']);
+        $tags = explode(',', $value);
+        foreach ($tags as $tag) {
+            $builder->whereHas('tags', function (Builder $query) use ($tag) {
+                $query->where('tags.name', $tag);
+            });
+        }
     }
 }

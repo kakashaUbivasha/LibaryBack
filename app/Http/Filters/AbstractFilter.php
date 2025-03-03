@@ -9,20 +9,11 @@ abstract class AbstractFilter implements FilterInterface
     /** @var array */
     private $queryParams = [];
 
-    /**
-     * AbstractFilter constructor.
-     *
-     * @param array $queryParams
-     */
-    public function __construct(array $queryParams)
-    {
-        $this->queryParams = $queryParams;
-    }
-
     abstract protected function getCallbacks(): array;
 
-    public function apply(Builder $builder)
+    public function apply(Builder $builder, array $queryParams): Builder
     {
+        $this->queryParams = $queryParams; // Сохраняем параметры в свойство
         $this->before($builder);
 
         foreach ($this->getCallbacks() as $name => $callback) {
@@ -30,6 +21,8 @@ abstract class AbstractFilter implements FilterInterface
                 call_user_func($callback, $builder, $this->queryParams[$name]);
             }
         }
+
+        return $builder;
     }
 
     /**
@@ -37,6 +30,7 @@ abstract class AbstractFilter implements FilterInterface
      */
     protected function before(Builder $builder)
     {
+        // Оставляем пустым, как было
     }
 
     /**

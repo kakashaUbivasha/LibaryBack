@@ -3,17 +3,21 @@
 namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\BookFilter;
 use App\Http\Requests\BookRequest;
 use App\Http\Requests\BookSearchRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
-use http\Env\Request;
+use Illuminate\Http\Request;
+
 
 class BookController extends Controller
 {
-    public function index()
+    public function index(BookFilter $filter, Request $request)
     {
-        return BookResource::collection(Book::paginate(20));
+        $perPage = $request->query('perPage', 20);
+        $books = $filter->apply(Book::query(), $request->query())->paginate($perPage);
+        return BookResource::collection($books);
     }
     public function show($id){
         $book = Book::findOrFail($id);
