@@ -55,6 +55,10 @@ class User extends Authenticatable
         return $this->belongsToMany(Book::class, 'reservations', 'user_id', 'book_id')
             ->withPivot('reserved_until', 'status')->withTimestamps();
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
