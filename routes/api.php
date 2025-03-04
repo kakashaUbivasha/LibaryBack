@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Book\FavoriteController;
 use App\Http\Controllers\Book\ReservationController;
+use App\Http\Controllers\Comment\CommentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,9 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::post('/reservation', [ReservationController::class, 'store']);
     Route::put('/reservation', [ReservationController::class, 'update']);
     Route::get('/reservation/history', [ReservationController::class, 'history']);
+    Route::post('/book/comment', [CommentController::class, 'store']);
+    Route::put('/book/comment/{comment}', [CommentController::class, 'update']);
+    Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
 });
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', LoginController::class);
@@ -39,6 +43,7 @@ Route::get('/books', [BookController::class, 'index']);
 Route::get('/book/search', [BookController::class, 'search']);
 Route::get('/books/top', [BookController::class, 'top']);
 Route::get('/books/{book}', [BookController::class, 'show']);
+Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
