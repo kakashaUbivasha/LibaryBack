@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum','token.expiration'])->get('/user', function (R
     return $request->user();
 });
 Route::group(['middleware'=>'auth:sanctum'],function(){
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout', \App\Http\Controllers\Auth\LogoutController::class);
 //    Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorite', [FavoriteController::class, 'store']);
@@ -37,7 +37,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::put('/book/comment/{comment}', [CommentController::class, 'update']);
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
 });
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', \App\Http\Controllers\Auth\RegisterController::class);
 Route::post('/login', LoginController::class);
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/book/search', [BookController::class, 'search']);
