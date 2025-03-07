@@ -27,7 +27,7 @@ class BookRequest extends FormRequest
             'description' => 'nullable|string',
             'publication_date' => 'required|date',
             'isbn' => 'nullable|numeric',
-            'image' => 'nullable|url',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'genre_id' => 'required|integer|exists:genres,id',
         ];
     }

@@ -9,6 +9,7 @@ use App\Http\Requests\BookSearchRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 
 class BookController extends Controller
@@ -26,17 +27,29 @@ class BookController extends Controller
     public function store(BookRequest $request)
     {
         $data = $request->validated();
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
         $book = Book::create($data);
         return new BookResource($book);
     }
     public function update($id, BookRequest $request){
         $data = $request->validated();
         $book = Book::findOrFail($id);
+        if($request->hasFile('image')){
+            if($book->image){
+                Storage::delete($book->image);
+            }
+            $data['image'] = $request->file('image')->store('images', 'public');
+        }
         $book->update($data);
         return new BookResource($book);
     }
     public function destroy($id){
         $book = Book::findOrFail($id);
+        if($book->image){
+            Storage::delete($book->image);
+        }
         $book->delete();
         return response()->json(['message'=>'Книга удалена'], 204);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class BookResource extends JsonResource
 {
@@ -21,9 +22,15 @@ class BookResource extends JsonResource
             'description'=>$this->description,
             'publication_date'=>$this->publication_date->format('Y-m-d H:i:s'),
             'isbn'=>$this->isbn,
-            'image'=>$this->image,
+            'image'=>$this->getImage(),
             'genre' => $this->genre ? $this->genre->name : null,
             'count'=>$this->count
         ];
+    }
+    private function getImage(): string{
+        if($this->image){
+            return Storage::url("images/{$this->image}");
+        }
+        return asset('storage/images/default.png');
     }
 }
