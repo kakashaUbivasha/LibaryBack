@@ -9,6 +9,7 @@ use App\Http\Requests\BookSearchRequest;
 use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -17,7 +18,14 @@ class BookController extends Controller
     public function index(BookFilter $filter, Request $request)
     {
         $perPage = $request->query('perPage', 20);
-        $books = $filter->apply(Book::query(), $request->query())->paginate($perPage);
+        $filters = $request->query();
+
+        $cacheKey = 'books_' . md5(json_encode($filters));
+
+        $books = Cache::remember($cacheKey, 3600, function () use ($filter, $filters, $perPage) {
+            return $filter->apply(Book::query(), $filters)->paginate($perPage);
+        });
+
         return BookResource::collection($books);
     }
     public function show($id){

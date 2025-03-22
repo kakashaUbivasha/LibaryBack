@@ -10,12 +10,14 @@ class BookFilter extends AbstractFilter
     public const GENRE = 'genre';
     public const AUTHOR = 'author';
     public const TAGS = 'tags';
+    public const SORT = 'sort';
     protected function getCallbacks(): array
     {
         return[
             self::GENRE => [$this, 'genre'],
             self::AUTHOR => [$this, 'author'],
             self::TAGS => [$this, 'tags'],
+            self::SORT => [$this, 'sortByDate'],
         ];
     }
     public function genre(Builder $builder, $value)
@@ -36,6 +38,14 @@ class BookFilter extends AbstractFilter
             $builder->whereHas('tags', function (Builder $query) use ($tag) {
                 $query->where('tags.name', $tag);
             });
+        }
+    }
+    public function sortByDate(Builder $builder, $value)
+    {
+        if ($value === 'newest') {
+            $builder->orderBy('created_at', 'desc');
+        } elseif ($value === 'oldest') {
+            $builder->orderBy('created_at', 'asc');
         }
     }
 }
