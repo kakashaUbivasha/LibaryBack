@@ -25,8 +25,6 @@ class LoginController extends MainController
         }
 //        $user->tokens()->delete();
         $token = $user->createToken('my-app-token')->plainTextToken;
-        DB::table('personal_access_tokens')->where('token', hash('sha256', explode('|', $token)[1]))
-            ->update(['expires_at' => \Carbon\Carbon::now()->addDays(10)]);
         return response()->json(['token' => $token,'user'=>$user], 200);
     }
 }

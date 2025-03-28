@@ -45,8 +45,10 @@ return [
     | "expires_at" attribute, but first-party sessions are not affected.
     |
     */
-
-    'expiration' => null,
+    'session' => [
+        'lifetime' => 120, // В минутах (в config/session.php)
+    ],
+    'expiration' => 60 * 24 * 7,
 
     /*
     |--------------------------------------------------------------------------
