@@ -16,6 +16,7 @@ class CommentResource extends JsonResource
     {
         return [
           'content'=>$this->content,
+          'book_title' => $this->book ? $this->book->title : 'Книга не найдена',
           'likes'=>$this->likes,
           'dislikes'=>$this->dislikes,
           'user_id'=>$this->user_id,

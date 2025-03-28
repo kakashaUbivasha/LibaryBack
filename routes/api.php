@@ -6,6 +6,7 @@ use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Book\FavoriteController;
 use App\Http\Controllers\Book\ReservationController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,10 +20,12 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::middleware(['auth:sanctum','token.expiration'])->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware'=>['auth:sanctum','token.expiration']], function(){
+    Route::get('/user', [UserController::class, 'index']);
 });
+//Route::middleware(['auth:sanctum','token.expiration'])->get('/user', function (Request $request) {
+//    return $request->user();
+//});
 Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::post('/logout', \App\Http\Controllers\Auth\LogoutController::class);
 //    Route::post('/refresh', [AuthController::class, 'refresh']);

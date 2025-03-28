@@ -25,6 +25,6 @@ class LoginController extends MainController
         }
 //        $user->tokens()->delete();
         $token = $user->createToken('my-app-token')->plainTextToken;
-        return response()->json(['token' => $token,'user'=>$user], 200);
+        return response()->json(['token' => $token], 200);
     }
 }
