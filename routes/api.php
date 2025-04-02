@@ -39,6 +39,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::post('/book/comment', [CommentController::class, 'store']);
     Route::put('/book/comment/{comment}', [CommentController::class, 'update']);
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
+    Route::get('/top-users', [UserController::class, 'topUsers']);
 });
 Route::post('/register', \App\Http\Controllers\Auth\RegisterController::class);
 Route::post('/login', LoginController::class);
