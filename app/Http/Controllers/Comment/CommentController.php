@@ -16,7 +16,9 @@ class CommentController extends Controller
     }
     public function store(CommentRequest $request){
         $data = $request->validated();
-        $comment = auth()->user()->comments()->create($data);
+        $user = auth()->user();
+        $comment = $user->comments()->create($data);
+        $user->increment('activity_score', 3);
         return CommentResource::make($comment);
     }
     public function update(CommentRequest $request, Comment $comment)

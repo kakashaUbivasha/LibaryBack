@@ -25,6 +25,7 @@ class ReservationController extends Controller
         $data = $request->validated();
         try {
             $reservation->store($user, $data);
+            $user->increment('activity_score', 5);
             return response(['message' => 'Книга успешно забронирована'], 201);
         }
         catch (\Exception $e) {

@@ -23,8 +23,8 @@ class LoginController extends MainController
                 'email' => ['Неверные данные'],
             ]);
         }
-//        $user->tokens()->delete();
         $token = $user->createToken('my-app-token')->plainTextToken;
+        $user->increment('activity_score', 1);
         return response()->json(['token' => $token], 200);
     }
 }
