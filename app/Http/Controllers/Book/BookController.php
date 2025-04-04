@@ -65,7 +65,6 @@ class BookController extends Controller
         $data = $request->validated()['query'];
         $books = Book::whereFullText(['title', 'description', 'author'], $data);
         return BookResource::collection($books->paginate(20));
-
     }
     public function top()
     {

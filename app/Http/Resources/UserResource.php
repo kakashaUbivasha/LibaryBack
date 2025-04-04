@@ -17,8 +17,10 @@ class UserResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'email'=>$this->email,
             'created_at'=>$this->created_at,
+            'passed_books_count' => $this->reservationBooks()
+                ->where('status', 'passed')
+                ->count(),
             'reviews'=>CommentResource::collection($this->comments),
         ];
     }

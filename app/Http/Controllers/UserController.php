@@ -18,4 +18,13 @@ class UserController extends Controller
         $topUsers = User::orderByDesc('activity_score')->limit(10)->get();
         return UserResource::collection($topUsers);
     }
+    public function guest($id)
+    {
+        try {
+            $user = User::findOrFail($id);
+            return new UserResource($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Не удалось найти пользователя'], 404);
+        }
+    }
 }
