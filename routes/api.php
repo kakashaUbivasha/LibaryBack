@@ -6,6 +6,7 @@ use App\Http\Controllers\Book\BookController;
 use App\Http\Controllers\Book\FavoriteController;
 use App\Http\Controllers\Book\ReservationController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\GenreController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +41,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::put('/book/comment/{comment}', [CommentController::class, 'update']);
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
     Route::get('/top-users', [UserController::class, 'topUsers']);
+    Route::get('/genres', [GenreController::class, 'index']);
 });
 Route::post('/register', \App\Http\Controllers\Auth\RegisterController::class);
 Route::post('/login', LoginController::class);
