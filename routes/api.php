@@ -41,7 +41,6 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::put('/book/comment/{comment}', [CommentController::class, 'update']);
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
     Route::get('/top-users', [UserController::class, 'topUsers']);
-    Route::get('/genres', [GenreController::class, 'index']);
 });
 Route::post('/register', \App\Http\Controllers\Auth\RegisterController::class);
 Route::post('/login', LoginController::class);
@@ -51,6 +50,7 @@ Route::get('/books/top', [BookController::class, 'top']);
 Route::get('/books/{book}', [BookController::class, 'show']);
 Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
+Route::get('/genres', [GenreController::class, 'index']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
