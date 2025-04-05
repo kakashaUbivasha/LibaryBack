@@ -25,7 +25,8 @@ class BookResource extends JsonResource
             'isbn'=>$this->isbn,
             'image'=>$this->getImage(),
             'genre' => $this->genre ? $this->genre->name : null,
-            'count'=>$this->count
+            'count'=>$this->count,
+            'language'=>$this->language
         ];
     }
     private function getImage(): string{
