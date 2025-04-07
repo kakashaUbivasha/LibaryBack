@@ -71,4 +71,10 @@ class BookController extends Controller
         $books = Book::withCount('reservations')->orderBy('reservations_count', 'desc')->limit(10)->get();
         return BookResource::collection($books);
     }
+
+    public function random()
+    {
+        $book = Book::inRandomOrder()->first();
+        return new BookResource($book);
+    }
 }

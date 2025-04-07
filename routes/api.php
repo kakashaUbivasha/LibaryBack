@@ -51,6 +51,7 @@ Route::get('/books/{book}', [BookController::class, 'show']);
 Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
 Route::get('/genres', [GenreController::class, 'index']);
+Route::get('random', [BookController::class, 'random']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
