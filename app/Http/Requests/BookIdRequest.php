@@ -25,4 +25,12 @@ class BookIdRequest extends FormRequest
             'book_id'=>'required|integer|exists:books,id'
         ];
     }
+    public function messages(): array
+    {
+        return [
+            'book_id.required' => 'key book_id обезателен',
+            'book_id.integer' => 'El campo :attribute debe ser un entero.',
+            'book_id.exists' => 'El campo :attribute no existe.',
+        ];
+    }
 }

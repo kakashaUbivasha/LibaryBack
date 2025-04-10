@@ -47,11 +47,11 @@ Route::post('/login', LoginController::class);
 Route::get('/books', [BookController::class, 'index']);
 Route::get('/book/search', [BookController::class, 'search']);
 Route::get('/books/top', [BookController::class, 'top']);
+Route::get('/books/random', [BookController::class, 'random']);
 Route::get('/books/{book}', [BookController::class, 'show']);
 Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
 Route::get('/genres', [GenreController::class, 'index']);
-Route::get('random', [BookController::class, 'random']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
