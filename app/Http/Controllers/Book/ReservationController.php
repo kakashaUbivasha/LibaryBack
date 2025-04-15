@@ -18,6 +18,7 @@ class ReservationController extends Controller
         $user = auth()->user();
         $reservations = $user->reservations()
             ->with('book')
+            ->where('status', 'active')
             ->get();
         return ReservationResource::collection($reservations);
     }
