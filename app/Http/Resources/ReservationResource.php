@@ -15,18 +15,14 @@ class ReservationResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id'=>$this->id,
-            'title'=>$this->title,
-            'author'=>$this->author,
-            'description'=>$this->description,
-            'publication_date'=>$this->publication_date->format('Y-m-d H:i:s'),
-            'isbn'=>$this->isbn,
-            'image'=>$this->image,
-            'genre' => $this->genre ? $this->genre->name : null,
-            'count'=>$this->count,
-            'reserved_until'=>$this->pivot->reserved_until,
-            'status'=>$this->pivot->status,
-            'updated_at'=>$this->pivot->updated_at
+            'reservation_time' => $this->created_at,
+            'book_title' => $this->book->title,
+            'book_id' => $this->book->id,
+            'status' => $this->status,
+            'user' => [
+                'id' => $this->user->id,
+                'name' => $this->user->name,
+            ],
         ];
     }
 }

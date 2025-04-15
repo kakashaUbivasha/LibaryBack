@@ -6,33 +6,30 @@ use App\Models\Reservation;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class UpdateExpiredReservations extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'reservations:expire';
+    protected $signature = 'reservations:update-expired';
+    protected $description = 'Обновляет статус бронирований, срок которых истёк';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Update status of expired reservations to "expired"';
-
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
-        $count = DB::table('reservations')
-            ->where('status', 'active')
-            ->where('reserved_until', '<', Carbon::now())
-            ->update(['status' => 'expired']);
-        $this->info("Updated $count expired reservations successfully!");
-        \Log::info("Expired $count reservations at " . now());
+        $expired = Reservation::where('status', 'active')
+            ->where('reserved_until', '<', now())
+            ->get();
+
+        $count = 0;
+
+        foreach ($expired as $reservation) {
+            $reservation->update(['status' => 'expired']);
+            $count++;
+        }
+
+        $this->info("Обновлено $count просроченных бронирований.");
+
+        Log::info("Команда reservations:update-expired: Обновлено $count записей.");
+
+        return 0;
     }
 }

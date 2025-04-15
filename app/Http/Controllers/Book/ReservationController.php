@@ -16,8 +16,10 @@ class ReservationController extends Controller
 {
     public function index(){
         $user = auth()->user();
-        $data = $user->reservationBooks;
-        return BookResource::collection($data);
+        $reservations = $user->reservations()
+            ->with('book')
+            ->get();
+        return ReservationResource::collection($reservations);
     }
     public function store(BookIdRequest $request, ReservationService $reservation)
     {

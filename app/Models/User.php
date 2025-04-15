@@ -51,9 +51,8 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Book::class, 'favorites', 'user_id', 'book_id');
     }
-    public function reservationBooks(){
-        return $this->belongsToMany(Book::class, 'reservations', 'user_id', 'book_id')
-            ->withPivot('reserved_until', 'status')->withTimestamps();
+    public function reservations(){
+        return $this->hasMany(Reservation::class);
     }
     public function comments()
     {
