@@ -30,7 +30,7 @@ class ReservationService
         }
 
         if ($reservation->status === 'passed') {
-            throw new \Exception('Эта книга уже была сдана', 400);
+            throw new \Exception('Эта книга уже была выдана', 400);
         }
 
         if ($reservation->status === 'canceled') {
@@ -51,7 +51,7 @@ class ReservationService
             ->first();
 
         if ($reservation->status === 'passed') {
-            throw new \Exception('Эта книга уже была сдана', 400);
+            throw new \Exception('Эта книга уже была выдана', 400);
         }
         if ($reservation->status === 'canceled') {
             throw new \Exception('Эта книга уже была отменена', 400);
@@ -109,6 +109,19 @@ class ReservationService
         }
 
         return $data;
+    }
+    public function returnedBook($data)
+    {
+        $book = Book::findOrFail($data['book_id']);
+        $reservation = Reservation::where('book_id', $book->id)
+            ->where('user_id', $data['user_id'])
+            ->orderByDesc('created_at')
+            ->first();
+        if ($reservation->status !== 'passed') {
+            throw new \Exception('Эта книга не выдана данному пользователю', 400);
+        }
+        $reservation->update(['status' => 'returned']);
+        $book->increment('count');
     }
 
 }

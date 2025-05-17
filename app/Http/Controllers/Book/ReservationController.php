@@ -40,7 +40,7 @@ class ReservationController extends Controller
         $data = $request->validated();
         try {
             $reservation->update($user, $data);
-            return response(['message' => 'Книга успешно сдана'], 200);
+            return response(['message' => 'Книга успешно отменена'], 200);
         }
         catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
@@ -57,6 +57,17 @@ class ReservationController extends Controller
             return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
         }
     }
+    public function returnedBook(BookIdRequest $request, ReservationService $reservation)
+    {
+        $data = $request->validated();
+        try{
+            $reservation->returnedBook($data);
+            return response(['message' => 'Книга успешно возвращена'], 200);
+        }catch (\Exception $e){
+            return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
+        }
+    }
+
     public function history(ReservationService $reservation){
         $user = auth()->user();
         try {

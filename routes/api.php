@@ -61,5 +61,6 @@ Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::delete('/books/{book}', [BookController::class, 'destroy']);
     Route::get('/admin/reservations', [\App\Http\Controllers\Admin\ReservationController::class, 'index']);
     Route::patch('admin/reservation/issuance', [ReservationController::class, 'issuance']);
+    Route::patch('admin/reservation/returned', [ReservationController::class, 'returnedBook']);
 });
 
