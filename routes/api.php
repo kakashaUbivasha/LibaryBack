@@ -38,7 +38,7 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::delete('/favorite', [FavoriteController::class, 'destroy']);
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservation', [ReservationController::class, 'store']);
-    Route::put('/reservation/canceled', [ReservationController::class, 'update']);
+    Route::put('/reservation/canceled', [ReservationController::class, 'canceledReserv']);
     Route::get('/reservation/history', [ReservationController::class, 'history']);
     Route::post('/book/comment', [CommentController::class, 'store']);
     Route::put('/book/comment/{comment}', [CommentController::class, 'update']);

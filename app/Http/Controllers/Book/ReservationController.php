@@ -35,11 +35,11 @@ class ReservationController extends Controller
             return response()->json(['message' => $e->getMessage()], $e->getCode() ?: 500);
         }
     }
-    public function update(BookIdRequest $request, ReservationService $reservation){
+    public function canceledReserv(BookIdRequest $request, ReservationService $reservation){
         $user = auth()->user();
         $data = $request->validated();
         try {
-            $reservation->update($user, $data);
+            $reservation->canceledReserv($user, $data);
             return response(['message' => 'Книга успешно отменена'], 200);
         }
         catch (\Exception $e) {

@@ -8,13 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class ReservationService
 {
-    public function update($authUser, $data)
+    public function canceledReserv($authUser, $data)
     {
         $book = Book::findOrFail($data['book_id']);
 
         $isAdmin = $authUser->role === 'Admin';
-
-        // Определяем, чей user_id использовать
         $targetUserId = $isAdmin && !empty($data['user_id'])
             ? $data['user_id']
             : $authUser->id;
@@ -120,7 +118,7 @@ class ReservationService
         if ($reservation->status !== 'passed') {
             throw new \Exception('Эта книга не выдана данному пользователю', 400);
         }
-        $reservation->update(['status' => 'returned']);
+        $reservation->update(['status' => 'returned', 'returned_date'=> now()]);
         $book->increment('count');
     }
 

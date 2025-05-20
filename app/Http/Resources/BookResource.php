@@ -30,9 +30,11 @@ class BookResource extends JsonResource
         ];
     }
     private function getImage(): string{
-        if($this->image){
-            return Storage::url("images/{$this->image}");
-        }
-        return asset('storage/images/default.png');
+//        if($this->image){
+//            return Storage::url("images/{$this->image}");
+//        }
+        $images = ['storage/images/default1.png', 'storage/images/default2.jpg', 'storage/images/default3.jpg', 'storage/images/default4.jpg', 'storage/images/default5.jpg'];
+
+        return asset($images[rand(0, 4)]);
     }
 }

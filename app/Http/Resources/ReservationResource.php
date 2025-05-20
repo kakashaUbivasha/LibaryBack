@@ -17,6 +17,7 @@ class ReservationResource extends JsonResource
         return [
             'reservation_time' => $this->created_at,
             'reserved_until'=>$this->reserved_until,
+            'returned_date'=>$this->returned_date,
             'book_title' => $this->book->title,
             'book_id' => $this->book->id,
             'status' => $this->status,
