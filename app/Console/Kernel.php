@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
-        $schedule->command('reservations:update-expired')->dailyAt('00:00');
+        $schedule->command('reservations:update-expired')->daily();
     }
 
     /**

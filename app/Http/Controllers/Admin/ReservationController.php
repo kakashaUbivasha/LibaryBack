@@ -11,7 +11,7 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::orderByDesc('updated_at')->get();
+        $reservations = Reservation::orderByDesc('updated_at')->paginate(20);
         return ReservationResource::collection($reservations);
     }
 }

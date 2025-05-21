@@ -21,7 +21,6 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::post('/genres/import', [GenreController::class, 'import']);
 Route::get('/books/random', [BookController::class, 'random']);
 Route::get('/books/{book}', [BookController::class, 'show']);
 Route::group(['middleware'=>['auth:sanctum','token.expiration']], function(){
@@ -56,6 +55,9 @@ Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
 Route::get('/genres', [GenreController::class, 'index']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/genres/import', [GenreController::class, 'import']);
+    Route::post('/tags/import', [\App\Http\Controllers\Book\TagController::class, 'import']);
+    Route::post('/books/import', [BookController::class, 'import']);
     Route::post('/books', [BookController::class, 'store']);
     Route::put('/books/{book}', [BookController::class, 'update']);
     Route::delete('/books/{book}', [BookController::class, 'destroy']);

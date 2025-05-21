@@ -6,13 +6,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\BookFilter;
 use App\Http\Requests\BookRequest;
 use App\Http\Requests\BookSearchRequest;
+use App\Http\Requests\ImportRequest;
 use App\Http\Resources\BookResource;
+use App\Imports\BooksImport;
 use App\Models\Book;
 use App\Models\BookView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Maatwebsite\Excel\Facades\Excel;
 
 
 class BookController extends Controller
@@ -86,5 +89,11 @@ class BookController extends Controller
     {
         $book = Book::inRandomOrder()->first();
         return new BookResource($book);
+    }
+
+    public function import(ImportRequest $request)
+    {
+        Excel::import(new BooksImport, $request->file('file'));
+        return response()->json(['message' => 'Импорт успешно завершён']);
     }
 }
