@@ -72,9 +72,13 @@ class ReservationService
 
         DB::transaction(function () use ($user, $book, $reservation) {
             if ($reservation) {
-                if (in_array($reservation->status, ['active', 'expired'])) {
+                if (in_array($reservation->status, ['active'])) {
                     throw new \Exception('Вы уже забронировали эту книгу', 400);
-                } elseif ($reservation->status === 'canceled') {
+                }
+                elseif ($reservation->status === 'expired'){
+                    throw new \Exception('Нужно вернуть книгу!', 400);
+                }
+                elseif ($reservation->status === 'canceled') {
                     Reservation::create([
                         'user_id' => $user->id,
                         'book_id' => $book->id,
