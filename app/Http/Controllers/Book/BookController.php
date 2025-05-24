@@ -35,15 +35,18 @@ class BookController extends Controller
     }
     public function show($id){
         $book = Book::findOrFail($id);
-        if (Auth::check()) {
-            BookView::updateOrCreate(
-                [
-                    'user_id' => Auth::id(),
-                    'book_id' => $book->id
-                ]
-            );
-        }
         return new BookResource($book);
+    }
+    public function addViewBook(BookRequest $request)
+    {
+        $user = auth()->user();
+        $data = $request->validated();
+        BookView::updateOrCreate(
+            [
+                'user_id'=>$user->id,
+                'book_id'=>$data['book_id']
+            ]
+        );
     }
     public function store(BookRequest $request)
     {

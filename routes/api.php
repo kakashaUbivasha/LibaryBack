@@ -34,7 +34,8 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
 //    Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorite', [FavoriteController::class, 'store']);
-    Route::delete('/favorite', [FavoriteController::class, 'destroy']);
+    Route::get('/favorite/{id}', [FavoriteController::class, 'show']);
+    Route::delete('/favorite/{id}', [FavoriteController::class, 'destroy']);
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservation', [ReservationController::class, 'store']);
     Route::put('/reservation/canceled', [ReservationController::class, 'canceledReserv']);
@@ -44,6 +45,8 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
     Route::get('/top-users', [UserController::class, 'topUsers']);
     Route::post('/ai/recommendations', [\App\Http\Controllers\AI\RecommendationController::class, 'index']);
+    Route::post('/view-book', [BookController::class, 'addViewBook']);
+
 });
 Route::post('/npl/suggest-tags', [NplController::class, 'index']);
 Route::post('/register', \App\Http\Controllers\Auth\RegisterController::class);

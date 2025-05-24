@@ -16,16 +16,22 @@ class FavoriteController extends Controller
         $favorites = $user->favoriteBooks()->get();
         return BookResource::collection($favorites);
     }
+    public function show($id)
+    {
+        $user = auth()->user();
+        $favorite = $user->favoriteBooks()->findOrFail($id);
+        return new BookResource($favorite);
+    }
     public function store(BookIdRequest $request){
         $user = auth()->user();
         $data = $request->validated();
         $user->favoriteBooks()->syncWithoutDetaching($data['book_id']);
         return response(['message'=>'Книга добавлена в извбранное'], 201);
     }
-    public function destroy(BookIdRequest $request){
+    public function destroy($id){
         $user = auth()->user();
-        $data = $request->validated();
-        $user->favoriteBooks()->detach($data['book_id']);
+        $book = Book::findOrFail($id);
+        $user->favoriteBooks()->detach($book->$id);
         return response(['message'=>'Книга успешно удалена из избранного'], 201);
 
     }

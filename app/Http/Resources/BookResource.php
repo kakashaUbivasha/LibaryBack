@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use App\Models\Genre;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class BookResource extends JsonResource
@@ -26,7 +27,8 @@ class BookResource extends JsonResource
             'image'=>$this->getImage(),
             'genre' => $this->genre ? $this->genre->name : null,
             'count'=>$this->count,
-            'language'=>$this->language
+            'language'=>$this->language,
+            'is_favorite'=>$this->getIsFavorite()
         ];
     }
     private function getImage(): string{
@@ -36,5 +38,13 @@ class BookResource extends JsonResource
         $images = ['storage/images/default1.png', 'storage/images/default2.jpg', 'storage/images/default3.jpg', 'storage/images/default4.jpg', 'storage/images/default5.jpg'];
 
         return asset($images[rand(0, 4)]);
+    }
+    private function getIsFavorite(): bool
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return false;
+        }
+        return $user->favoriteBooks()->where('book_id', $this->id)->exists();
     }
 }
