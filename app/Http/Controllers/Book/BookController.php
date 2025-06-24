@@ -55,6 +55,10 @@ class BookController extends Controller
             $data['image'] = $request->file('image')->store('images', 'public');
         }
         $book = Book::create($data);
+        if(isset($data['tags']))
+        {
+            $book->tags()->attach($data['tags']);
+        }
         return new BookResource($book);
     }
     public function update($id, BookRequest $request){
@@ -66,6 +70,10 @@ class BookController extends Controller
             }
             $data['image'] = $request->file('image')->store('images', 'public');
         }
+        if(isset($data['tags']))
+        {
+            $book->tags()->sync($data['tags']);
+        }
         $book->update($data);
         return new BookResource($book);
     }
@@ -75,6 +83,7 @@ class BookController extends Controller
             Storage::delete($book->image);
         }
         $book->delete();
+        $book->tags()->detach();
         return response()->json(['message'=>'Книга удалена'], 204);
     }
     public function search(BookSearchRequest $request){
