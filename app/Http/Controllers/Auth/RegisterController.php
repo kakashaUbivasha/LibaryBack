@@ -15,7 +15,7 @@ class RegisterController extends MainController
         try{
 
             $data = $request->validated();
-            $user=User::create($data);
+            User::create($data);
             return response()->json(['massage'=>'пользователь создан'], 200);
         }
         catch(ValidationException $e){
