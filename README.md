@@ -64,3 +64,9 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## API Endpoints
+
+### Administration
+
+- `POST /api/book-tags/import` — импорт связей книг и тегов из загружаемого файла (передайте файл в параметре `file`).
