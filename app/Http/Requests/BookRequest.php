@@ -29,6 +29,7 @@ class BookRequest extends FormRequest
             'isbn' => 'nullable|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'genre_id' => 'required|integer|exists:genres,id',
+            'count' => 'required|integer|min:0',
         ];
     }
     public function messages(): array{
@@ -43,7 +44,10 @@ class BookRequest extends FormRequest
             'image.url' => 'Ссылка на изображение должна быть корректным URL.',
             'genre_id.required' => 'Жанр обязателен.',
             'genre_id.integer' => 'Жанр должен быть числом.',
-            'genre_id.exists' => 'Выбранный жанр не существует.'
+            'genre_id.exists' => 'Выбранный жанр не существует.',
+            'count.required' => 'Количество экземпляров книги обязательно.',
+            'count.integer' => 'Количество экземпляров книги должно быть целым числом.',
+            'count.min' => 'Количество экземпляров книги не может быть отрицательным.'
         ];
     }
 }

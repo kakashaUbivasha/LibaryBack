@@ -37,7 +37,7 @@ class BookController extends Controller
         $book = Book::findOrFail($id);
         return new BookResource($book);
     }
-    public function addViewBook(BookRequest $request)
+    public function addViewBook(BookViewRequest $request)
     {
         $user = auth()->user();
         $data = $request->validated();
