@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         Genre::factory()->count(5)->create();
+        $this->call(AdminSeeder::class);
     }
 }
