@@ -48,6 +48,10 @@ class ReservationService
             ->orderByDesc('created_at')
             ->first();
 
+        if (!$reservation) {
+            throw new \Exception('Бронь не найдена', 404);
+        }
+
         if ($reservation->status === 'passed') {
             throw new \Exception('Эта книга уже была выдана', 400);
         }
@@ -119,6 +123,10 @@ class ReservationService
             ->where('user_id', $data['user_id'])
             ->orderByDesc('created_at')
             ->first();
+
+        if (!$reservation) {
+            throw new \Exception('Бронь не найдена', 404);
+        }
         if ($reservation->status !== 'passed') {
             throw new \Exception('Эта книга не выдана данному пользователю', 400);
         }
