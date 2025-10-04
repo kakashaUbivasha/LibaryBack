@@ -33,9 +33,9 @@ class CommentController extends Controller
 
         if($comment->user_id == $user->id || $user->role == 'Admin'){
             $comment->delete();
-            return response('Комментарий удалён', 204);
+            return response()->json(['message' => 'Комментарий удалён'], 200);
         }
-        return response('', 403);
+        return response()->json(['message' => 'У вас нет прав на удаление'], 403);
     }
 //    public function like(Comment $comment){
 //        $user = auth()->user();
