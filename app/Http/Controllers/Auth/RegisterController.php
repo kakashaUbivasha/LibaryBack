@@ -2,24 +2,30 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\RegisterRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class RegisterController extends MainController
 {
     public function __invoke(RegisterRequest $request){
         try{
-
             $data = $request->validated();
             User::create($data);
-            return response()->json(['massage'=>'пользователь создан'], 200);
+
+            return response()->json(['message' => 'пользователь создан'], 201);
         }
         catch(ValidationException $e){
-            return response()->json([$e],400);
+            return response()->json([
+                'message' => $e->getMessage(),
+                'errors' => $e->errors(),
+            ], 422);
+        }
+        catch(Throwable $e){
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 }
