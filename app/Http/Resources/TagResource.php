@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class GenreResource extends JsonResource
+class TagResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,8 +17,6 @@ class GenreResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'created_at' => $this->created_at?->toISOString(),
-            'updated_at' => $this->updated_at?->toISOString(),
         ];
     }
 }
