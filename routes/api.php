@@ -32,6 +32,7 @@ Route::group(['middleware'=>['auth:sanctum','token.expiration']], function(){
 //    return $request->user();
 //});
 Route::group(['middleware'=>'auth:sanctum'],function(){
+    Route::post('/view-book', [BookController::class, 'addViewBook']);
     Route::post('/logout', \App\Http\Controllers\Auth\LogoutController::class);
 //    Route::post('/refresh', [AuthController::class, 'refresh']);
     Route::get('/favorites', [FavoriteController::class, 'index']);
@@ -47,7 +48,6 @@ Route::group(['middleware'=>'auth:sanctum'],function(){
     Route::delete('/book/comment/{comment}', [CommentController::class, 'destroy']);
     Route::get('/top-users', [UserController::class, 'topUsers']);
     Route::post('/ai/recommendations', [\App\Http\Controllers\AI\RecommendationController::class, 'index']);
-    Route::post('/view-book', [BookController::class, 'addViewBook']);
 
 });
 Route::post('/npl/suggest-tags', [NplController::class, 'index']);
