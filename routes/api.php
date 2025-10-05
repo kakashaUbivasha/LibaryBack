@@ -59,7 +59,11 @@ Route::get('/books/top', [BookController::class, 'top']);
 Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
 Route::get('/genres', [GenreController::class, 'index']);
+Route::get('/genres/{genre}', [GenreController::class, 'show']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::post('/genres', [GenreController::class, 'store']);
+    Route::match(['put', 'patch'], '/genres/{genre}', [GenreController::class, 'update']);
+    Route::delete('/genres/{genre}', [GenreController::class, 'destroy']);
     Route::post('/genres/import', [GenreController::class, 'import']);
     Route::post('/tags/import', [TagController::class, 'import']);
     Route::post('/book-tags/import', [BookTagController::class, 'import']);
