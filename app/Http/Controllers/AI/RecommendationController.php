@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\AI;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookResource;
+use App\Models\Book;
 use App\Models\Tag;
 use App\Services\GeminiService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class RecommendationController extends Controller
@@ -40,6 +41,32 @@ class RecommendationController extends Controller
         Log::info('Отправка запроса к Gemini');
         $response = $gemini->predict($prompt);
         Log::info('Получен ответ от Gemini: ' . $response);
-        return response()->json(['tags' => $response]);
+
+        $recommendedTagNames = json_decode($response, true);
+        if (!is_array($recommendedTagNames)) {
+            $recommendedTagNames = [];
+        }
+
+        $tagIds = Tag::whereIn('name', $recommendedTagNames)->pluck('id');
+
+        $books = collect();
+        if ($tagIds->isNotEmpty()) {
+            $books = Book::query()
+                ->whereHas(
+                    'tags',
+                    fn ($query) => $query->whereIn('tags.id', $tagIds),
+                    '=',
+                    $tagIds->count()
+                )
+                ->limit(10)
+                ->get();
+        }
+
+        $bookResources = BookResource::collection($books);
+
+        return response()->json([
+            'tags' => $recommendedTagNames,
+            'books' => $bookResources->resolve(),
+        ]);
     }
 }
