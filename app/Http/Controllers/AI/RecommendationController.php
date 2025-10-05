@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\AI;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookResource;
+use App\Models\Book;
 use App\Models\Tag;
 use App\Services\GeminiService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class RecommendationController extends Controller
@@ -30,19 +31,42 @@ class RecommendationController extends Controller
             $prompt .= "1. Название: \"{$book->book->title}\", Описание: \"{$book->book->description}\"\n";
         }
         if ($tagsString === null) {
-            $prompt .= "\nНа основе этих книг определи предпочтения пользователя и объясни, что список доступных тэгов пуст, поэтому ты не можешь предложить конкретные тэги. Предложи пользователю обратиться к библиотекарю или уточнить интересующие направления.
-
-        Формат ответа:
-        1. Рекомендация — краткое объяснение.";
+            $prompt .= "\nНа основе этих книг определи предпочтения пользователя. Список доступных тэгов пуст.";
+            $prompt .= "\nОтветь строго валидным JSON-массивом []. Никаких пояснений, текста до или после массива не добавляй.";
         } else {
-            $prompt .= "\nНа основе этих книг определи предпочтения пользователя и предложи ему 3 тэга из списка тэгов: {$tagsString}, которые ему точно подойдут. Учитывай жанры, атмосферу и стиль произведений.
-
-        Формат ответа:
-        1. Название книги — краткое объяснение, почему она подойдёт.";
+            $prompt .= "\nНа основе этих книг определи предпочтения пользователя и выбери до 3 тэгов из списка доступных тэгов: {$tagsString}, которые ему точно подойдут. Учитывай жанры, атмосферу и стиль произведений.";
+            $prompt .= "\nОтветь строго валидным JSON-массивом с названиями выбранных тэгов (например, [\"фантастика\",\"детектив\"]). Никаких пояснений, текста до или после массива не добавляй.";
         }
+
         Log::info('Отправка запроса к Gemini');
         $response = $gemini->predict($prompt);
         Log::info('Получен ответ от Gemini: ' . $response);
-        return response()->json(['tags' => $response]);
+
+        $recommendedTagNames = json_decode($response, true);
+        if (!is_array($recommendedTagNames)) {
+            $recommendedTagNames = [];
+        }
+
+        $tagIds = Tag::whereIn('name', $recommendedTagNames)->pluck('id');
+
+        $books = collect();
+        if ($tagIds->isNotEmpty()) {
+            $books = Book::query()
+                ->whereHas(
+                    'tags',
+                    fn ($query) => $query->whereIn('tags.id', $tagIds),
+                    '=',
+                    $tagIds->count()
+                )
+                ->limit(10)
+                ->get();
+        }
+
+        $bookResources = BookResource::collection($books);
+
+        return response()->json([
+            'tags' => $recommendedTagNames,
+            'books' => $bookResources->resolve(),
+        ]);
     }
 }
