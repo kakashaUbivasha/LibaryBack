@@ -60,12 +60,17 @@ Route::get('/books/{book}/comments', [CommentController::class, 'index']);
 Route::get('/guest/{id}', [UserController::class, 'guest']);
 Route::get('/genres', [GenreController::class, 'index']);
 Route::get('/genres/{genre}', [GenreController::class, 'show']);
+Route::get('/tags', [TagController::class, 'index']);
+Route::get('/tags/{tag}', [TagController::class, 'show']);
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::post('/genres', [GenreController::class, 'store']);
     Route::match(['put', 'patch'], '/genres/{genre}', [GenreController::class, 'update']);
     Route::delete('/genres/{genre}', [GenreController::class, 'destroy']);
     Route::post('/genres/import', [GenreController::class, 'import']);
     Route::post('/tags/import', [TagController::class, 'import']);
+    Route::post('/tags', [TagController::class, 'store']);
+    Route::match(['put', 'patch'], '/tags/{tag}', [TagController::class, 'update']);
+    Route::delete('/tags/{tag}', [TagController::class, 'destroy']);
     Route::post('/book-tags/import', [BookTagController::class, 'import']);
     Route::post('/books/import', [BookController::class, 'import']);
     Route::post('/books', [BookController::class, 'store']);
