@@ -12,7 +12,8 @@ class RecommendationController extends Controller
 {
     public function index(GeminiService $gemini){
         $user = auth()->user();
-        $tags = Tag::all()->pluck('name')->toArray();
+        $tags = Tag::all()->pluck('name')->filter()->values()->toArray();
+        $tagsString = empty($tags) ? null : '["' . implode('", "', $tags) . '"]';
         $views_books = $user->views()->with('book')->orderBy('updated_at', 'desc')->take(10)->get();
         $reservations_books = $user->reservations()->with('book')->orderBy('updated_at', 'desc')->take(10)->get();
         if($views_books->count() < 10 && $reservations_books->count() < 5)
@@ -28,10 +29,17 @@ class RecommendationController extends Controller
         foreach ($views_books as $book) {
             $prompt .= "1. Название: \"{$book->book->title}\", Описание: \"{$book->book->description}\"\n";
         }
-        $prompt .= "\nНа основе этих книг определи предпочтения пользователя и предложи ему 3 тэга из списка тэгов: [\"{$tags['name']}\"], которые ему точно подойдут. Учитывай жанры, атмосферу и стиль произведений.
+        if ($tagsString === null) {
+            $prompt .= "\nНа основе этих книг определи предпочтения пользователя и объясни, что список доступных тэгов пуст, поэтому ты не можешь предложить конкретные тэги. Предложи пользователю обратиться к библиотекарю или уточнить интересующие направления.
+
+        Формат ответа:
+        1. Рекомендация — краткое объяснение.";
+        } else {
+            $prompt .= "\nНа основе этих книг определи предпочтения пользователя и предложи ему 3 тэга из списка тэгов: {$tagsString}, которые ему точно подойдут. Учитывай жанры, атмосферу и стиль произведений.
 
         Формат ответа:
         1. Название книги — краткое объяснение, почему она подойдёт.";
+        }
         Log::info('Отправка запроса к Gemini');
         $response = $gemini->predict($prompt);
         Log::info('Получен ответ от Gemini: ' . $response);
