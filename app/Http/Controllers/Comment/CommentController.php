@@ -35,7 +35,7 @@ class CommentController extends Controller
             $comment->delete();
             return response()->json(['message' => 'Комментарий удалён'], 200);
         }
-        return response()->json(['message' => 'У вас нет прав на удаление'], 403);
+        return response()->json(['message' => 'У вас нет прав на удаление', 'user'=>$user, 'com_id'=>$comment], 403);
     }
 //    public function like(Comment $comment){
 //        $user = auth()->user();

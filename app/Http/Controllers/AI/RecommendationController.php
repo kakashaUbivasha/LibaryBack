@@ -55,7 +55,7 @@ class RecommendationController extends Controller
                 ->whereHas(
                     'tags',
                     fn ($query) => $query->whereIn('tags.id', $tagIds),
-                    '=',
+                    '>=',
                     $tagIds->count()
                 )
                 ->limit(10)
